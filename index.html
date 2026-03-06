@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MiTienda Chat Widget - Demo</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; padding: 40px; background: #f5f5f5; }
+    h1 { color: #333; }
+    p { color: #666; max-width: 600px; }
+    code { background: #e5e5e5; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+  <h1>Demo - MiTienda Chat Widget</h1>
+  <p>El widget aparece como burbuja flotante en la esquina inferior derecha.</p>
+  <p>Modo actual: <code>support</code>. Cambia los atributos <code>data-mode</code> y <code>data-tienda-id</code> en el script tag para probar el modo shopping.</p>
+  <div id="mitienda-chat"></div>
+  <script type="module" src="/src/main.ts" data-mode="support"></script>
+</body>
+</html>
