@@ -88,8 +88,8 @@ watch(
           ¿Necesitas hablar con una persona? Chatea por WhatsApp
         </button>
       </div>
-
-      <ChatInput />
     </template>
+
+    <ChatInput />
   </div>
 </template>

@@ -41,7 +41,7 @@ const suggestions = computed(() =>
 </script>
 
 <template>
-  <div class="mt-flex-1 mt-flex mt-flex-col mt-items-center mt-justify-center mt-px-6 mt-py-8 mt-text-center">
+  <div class="mt-flex-1 mt-flex mt-flex-col mt-items-center mt-justify-center mt-px-6 mt-py-8 mt-text-center mt-overflow-y-auto">
     <div class="mt-w-16 mt-h-16 mt-rounded-full mt-bg-primary/10 mt-flex mt-items-center mt-justify-center mt-mb-4">
       <svg v-if="isShopping" xmlns="http://www.w3.org/2000/svg" class="mt-w-8 mt-h-8 mt-text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
