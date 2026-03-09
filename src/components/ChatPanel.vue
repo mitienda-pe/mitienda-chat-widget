@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useChatStore } from '../stores/chat';
 import ChatHome from './ChatHome.vue';
 import ChatMessage from './ChatMessage.vue';
@@ -9,6 +9,7 @@ import { nextTick, ref, watch } from 'vue';
 
 const store = useChatStore();
 const messagesContainer = ref<HTMLElement | null>(null);
+const prevMessageCount = ref(store.messages.length);
 
 const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER || '51967797232';
 
@@ -25,12 +26,45 @@ function openWhatsApp() {
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=Hola, necesito ayuda`, '_blank');
 }
 
+function scrollToBottom() {
+  if (messagesContainer.value) {
+    messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
+  }
+}
+
+function scrollToLastMessage() {
+  if (!messagesContainer.value) return;
+  const children = messagesContainer.value.children;
+  if (children.length < 2) {
+    scrollToBottom();
+    return;
+  }
+  // Scroll to the start of the last message element
+  const lastMsg = children[children.length - 1] as HTMLElement;
+  lastMsg.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// On mount: scroll to bottom to show latest messages (restored from localStorage)
+onMounted(async () => {
+  await nextTick();
+  scrollToBottom();
+});
+
 watch(
   () => store.messages.length,
-  async () => {
+  async (newLen) => {
+    const wasUser = newLen > prevMessageCount.value &&
+      store.messages[newLen - 1]?.role === 'user';
+    prevMessageCount.value = newLen;
+
     await nextTick();
-    if (messagesContainer.value) {
-      messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
+
+    if (wasUser) {
+      // User sent a message: scroll to bottom so they see the typing indicator
+      scrollToBottom();
+    } else {
+      // Bot responded: scroll to the start of the new message
+      scrollToLastMessage();
     }
   }
 );
