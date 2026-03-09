@@ -32,7 +32,7 @@ const shoppingSuggestions = [
   '¿Qué productos tienen en oferta?',
   'Busco algo para regalar',
   '¿Cuáles son los más vendidos?',
-  'Necesito una recomendación',
+  '¿Dónde está mi pedido?',
 ];
 
 const suggestions = computed(() =>
