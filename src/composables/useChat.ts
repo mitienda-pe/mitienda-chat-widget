@@ -22,6 +22,10 @@ export function useChat() {
         history: store.history.slice(0, -1),
       };
 
+      if (store.widgetConfig.country) {
+        body.country = store.widgetConfig.country;
+      }
+
       if (isShopping && store.widgetConfig.tiendaId) {
         body.tienda_id = store.widgetConfig.tiendaId;
       }

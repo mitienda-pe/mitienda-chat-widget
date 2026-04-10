@@ -10,6 +10,7 @@ const scriptTag = document.querySelector('script[data-mode]') || document.curren
 const dataMode = (scriptTag?.getAttribute('data-mode') || 'support') as WidgetMode;
 const dataTiendaId = scriptTag?.getAttribute('data-tienda-id');
 const dataBotName = scriptTag?.getAttribute('data-bot-name');
+const dataCountry = scriptTag?.getAttribute('data-country');
 
 const mountEl = document.getElementById('mitienda-chat') || (() => {
   const el = document.createElement('div');
@@ -29,4 +30,5 @@ store.setWidgetConfig({
   mode: dataMode,
   tiendaId: dataTiendaId ? parseInt(dataTiendaId, 10) : undefined,
   botName: dataBotName || undefined,
+  country: dataCountry || undefined,
 });

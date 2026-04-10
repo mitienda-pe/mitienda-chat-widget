@@ -32,6 +32,7 @@ export interface WidgetConfig {
   mode: WidgetMode;
   tiendaId?: number;
   botName?: string;
+  country?: string;
 }
 
 const STORAGE_KEY = 'mitienda-chat-history';
