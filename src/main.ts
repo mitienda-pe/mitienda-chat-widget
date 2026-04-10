@@ -6,7 +6,8 @@ import type { WidgetMode } from './stores/chat';
 import './style.css';
 
 // Read config from script tag data attributes
-const scriptTag = document.querySelector('script[data-mode]') || document.currentScript;
+// For async scripts, document.currentScript is null, so we find by our unique attribute
+const scriptTag = document.currentScript || document.querySelector('script[data-mitienda-chat]');
 const dataMode = (scriptTag?.getAttribute('data-mode') || 'support') as WidgetMode;
 const dataTiendaId = scriptTag?.getAttribute('data-tienda-id');
 const dataBotName = scriptTag?.getAttribute('data-bot-name');
