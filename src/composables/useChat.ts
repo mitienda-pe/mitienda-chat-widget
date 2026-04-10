@@ -13,7 +13,8 @@ export function useChat() {
     store.isLoading = true;
 
     try {
-      const isShopping = store.widgetConfig.mode === 'shopping';
+      const mode = store.widgetConfig.mode;
+      const isShopping = mode === 'shopping';
       const endpoint = isShopping ? '/shopping/chat' : '/chat';
 
       const body: Record<string, any> = {
@@ -24,6 +25,10 @@ export function useChat() {
 
       if (store.widgetConfig.country) {
         body.country = store.widgetConfig.country;
+      }
+
+      if (mode === 'sales') {
+        body.mode = 'sales';
       }
 
       if (isShopping && store.widgetConfig.tiendaId) {
@@ -42,7 +47,7 @@ export function useChat() {
 
       const data = await response.json();
 
-      // Support mode: extract sources
+      // Support/Sales mode: extract sources
       const sources: Source[] = [];
       if (!isShopping && data.sources) {
         const seenUrls = new Set<string>();

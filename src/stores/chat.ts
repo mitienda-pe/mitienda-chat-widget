@@ -26,7 +26,7 @@ export interface Message {
   products?: ProductItem[];
 }
 
-export type WidgetMode = 'support' | 'shopping';
+export type WidgetMode = 'support' | 'shopping' | 'sales';
 
 export interface WidgetConfig {
   mode: WidgetMode;
