@@ -1,3 +1,80 @@
-@tailwind base;
+/*
+ * Scoped reset for the chat widget container only.
+ * Replaces @tailwind base (preflight) to avoid overriding host page styles.
+ */
+#mitienda-chat {
+  box-sizing: border-box;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+#mitienda-chat *,
+#mitienda-chat *::before,
+#mitienda-chat *::after {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: #e5e7eb;
+}
+
+#mitienda-chat img,
+#mitienda-chat svg,
+#mitienda-chat video {
+  display: block;
+  vertical-align: middle;
+  max-width: 100%;
+  height: auto;
+}
+
+#mitienda-chat button {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+#mitienda-chat input,
+#mitienda-chat textarea {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+#mitienda-chat textarea {
+  resize: vertical;
+}
+
+#mitienda-chat a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+#mitienda-chat p,
+#mitienda-chat h1,
+#mitienda-chat h2,
+#mitienda-chat h3,
+#mitienda-chat h4,
+#mitienda-chat h5,
+#mitienda-chat h6 {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+#mitienda-chat ul,
+#mitienda-chat ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
 @tailwind components;
 @tailwind utilities;
