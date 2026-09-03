@@ -1,0 +1,5 @@
+# pnpm 11 aborta el install si un paquete con script de build no está declarado acá.
+# Mismo patrón que mitienda-POS-Vue3: ver la nota del monorepo sobre allowBuilds.
+allowBuilds:
+  esbuild: true    # Vite lo necesita para compilar
+  vue-demi: false  # pinia lo trae; su postinstall no hace falta con Vue 3 fijo

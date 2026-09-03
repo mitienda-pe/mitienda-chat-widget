@@ -15,6 +15,12 @@ const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER || '51967797232';
 
 const mode = computed(() => store.widgetConfig.mode);
 
+/** ¿La respuesta ya se está escribiendo en pantalla? */
+const isWriting = computed(() => {
+  const ultimo = store.messages[store.messages.length - 1];
+  return Boolean(ultimo?.streaming && ultimo.content.length > 0);
+});
+
 const BOT_NAME = computed(() => {
   if (store.widgetConfig.botName) return store.widgetConfig.botName;
   switch (mode.value) {
@@ -55,8 +61,8 @@ onMounted(async () => {
 watch(
   () => store.messages.length,
   async (newLen) => {
-    const wasUser = newLen > prevMessageCount.value &&
-      store.messages[newLen - 1]?.role === 'user';
+    const ultimo = store.messages[newLen - 1];
+    const wasUser = newLen > prevMessageCount.value && ultimo?.role === 'user';
     prevMessageCount.value = newLen;
 
     await nextTick();
@@ -64,8 +70,30 @@ watch(
     if (wasUser) {
       // User sent a message: scroll to bottom so they see the typing indicator
       scrollToBottom();
+    } else if (ultimo?.streaming) {
+      // La respuesta recién se abre y todavía está vacía: llevar el scroll al
+      // final deja el hueco a la vista para que el texto aparezca ahí. Encuadrar
+      // el mensaje vendrá después, cuando tenga altura.
+      scrollToBottom();
     } else {
       // Bot responded: scroll to the start of the new message
+      scrollToLastMessage();
+    }
+  }
+);
+
+/**
+ * Al terminar de escribirse, se encuadra el mensaje desde su primera línea.
+ *
+ * Durante el streaming no se toca el scroll a propósito: el texto va apareciendo
+ * hacia abajo y moverlo bajo el dedo del comprador mientras lee es peor que
+ * dejarlo quieto.
+ */
+watch(
+  () => store.messages[store.messages.length - 1]?.streaming,
+  async (estaEscribiendo, estaba) => {
+    if (estaba && !estaEscribiendo) {
+      await nextTick();
       scrollToLastMessage();
     }
   }
@@ -115,7 +143,14 @@ watch(
           :key="msg.id"
           :message="msg"
         />
-        <ChatTypingIndicator v-if="store.isLoading" />
+        <!--
+          El indicador desaparece apenas empieza a llegar texto: mantenerlo debajo
+          de una respuesta que ya se está escribiendo sugiere que falta otra cosa.
+        -->
+        <ChatTypingIndicator
+          v-if="store.isLoading && !isWriting"
+          :label="store.progressLabel"
+        />
       </div>
 
       <!-- WhatsApp button -->

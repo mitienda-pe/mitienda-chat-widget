@@ -24,6 +24,8 @@ export interface Message {
   timestamp: number;
   sources?: Source[];
   products?: ProductItem[];
+  /** El mensaje se está escribiendo ahora mismo: no se guarda hasta terminar. */
+  streaming?: boolean;
 }
 
 export type WidgetMode = 'support' | 'shopping' | 'sales';
@@ -67,6 +69,8 @@ export const useChatStore = defineStore('chat', () => {
   const sessionId = ref(loadSession());
   const showHome = ref(messages.value.length === 0);
   const widgetConfig = ref<WidgetConfig>({ mode: 'support' });
+  /** Qué está haciendo el asistente ahora: "Buscando polos…". */
+  const progressLabel = ref<string | null>(null);
 
   const history = computed(() =>
     messages.value.map((m) => ({ role: m.role, content: m.content }))
@@ -86,6 +90,59 @@ export const useChatStore = defineStore('chat', () => {
       ...(products?.length ? { products } : {}),
     });
     saveMessages();
+  }
+
+  /**
+   * Abre un mensaje del asistente vacío para irlo llenando.
+   *
+   * Nada de esto toca localStorage hasta que el mensaje termina: guardar en cada
+   * fragmento serializaría la conversación entera decenas de veces por respuesta.
+   */
+  function startAssistantMessage(): string {
+    const id = generateId();
+    messages.value.push({
+      id,
+      role: 'assistant',
+      content: '',
+      timestamp: Date.now(),
+      streaming: true,
+    });
+    return id;
+  }
+
+  function findMessage(id: string): Message | undefined {
+    return messages.value.find((m) => m.id === id);
+  }
+
+  function appendToMessage(id: string, text: string) {
+    const msg = findMessage(id);
+    if (msg) msg.content += text;
+  }
+
+  /** El asistente estaba pensando en voz alta y luego fue a buscar: se descarta. */
+  function resetMessageContent(id: string) {
+    const msg = findMessage(id);
+    if (msg) msg.content = '';
+  }
+
+  function setMessageProducts(id: string, products: ProductItem[]) {
+    const msg = findMessage(id);
+    if (msg && products.length) msg.products = products;
+  }
+
+  function finishMessage(id: string, content?: string) {
+    const msg = findMessage(id);
+    if (!msg) return;
+    // El evento final trae el texto completo: si algún fragmento se perdió, esto
+    // lo deja consistente con lo que el servidor realmente respondió.
+    if (content) msg.content = content;
+    msg.streaming = false;
+    progressLabel.value = null;
+    saveMessages();
+  }
+
+  function dropMessage(id: string) {
+    messages.value = messages.value.filter((m) => m.id !== id);
   }
 
   function setWidgetConfig(cfg: WidgetConfig) {
@@ -117,7 +174,14 @@ export const useChatStore = defineStore('chat', () => {
     showHome,
     history,
     widgetConfig,
+    progressLabel,
     addMessage,
+    startAssistantMessage,
+    appendToMessage,
+    resetMessageContent,
+    setMessageProducts,
+    finishMessage,
+    dropMessage,
     toggleOpen,
     startConversation,
     clearHistory,
