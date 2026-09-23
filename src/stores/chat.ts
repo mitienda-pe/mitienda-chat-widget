@@ -35,6 +35,15 @@ export interface WidgetConfig {
   tiendaId?: number;
   botName?: string;
   country?: string;
+  /**
+   * Enlace de WhatsApp para hablar con una persona.
+   *
+   * Lo pasa quien monta el widget, ya armado. En una tienda es el WhatsApp del
+   * comerciante: mandar al comprador al de MiTienda no le sirve a nadie, y el
+   * número no se puede compilar en el bundle porque hay uno solo para todas las
+   * tiendas. En la landing, donde sí atiende MiTienda, se usa el de por defecto.
+   */
+  whatsappUrl?: string;
 }
 
 const STORAGE_KEY = 'mitienda-chat-history';

@@ -12,6 +12,8 @@ const dataMode = (scriptTag?.getAttribute('data-mode') || 'support') as WidgetMo
 const dataTiendaId = scriptTag?.getAttribute('data-tienda-id');
 const dataBotName = scriptTag?.getAttribute('data-bot-name');
 const dataCountry = scriptTag?.getAttribute('data-country');
+// Ya armado por quien monta el widget: en una tienda, el WhatsApp del comerciante.
+const dataWhatsappUrl = scriptTag?.getAttribute('data-whatsapp-url');
 
 const mountEl = document.getElementById('mitienda-chat') || (() => {
   const el = document.createElement('div');
@@ -32,4 +34,5 @@ store.setWidgetConfig({
   tiendaId: dataTiendaId ? parseInt(dataTiendaId, 10) : undefined,
   botName: dataBotName || undefined,
   country: dataCountry || undefined,
+  whatsappUrl: dataWhatsappUrl || undefined,
 });

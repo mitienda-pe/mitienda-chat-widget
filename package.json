@@ -1,6 +1,6 @@
 {
   "name": "@mitienda/chat-widget",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Widget de chat embebible para MiTienda - Soporte y Shopping Assistant",
   "type": "module",
   "main": "dist/mitienda-chat.iife.js",

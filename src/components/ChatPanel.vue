@@ -11,7 +11,7 @@ const store = useChatStore();
 const messagesContainer = ref<HTMLElement | null>(null);
 const prevMessageCount = ref(store.messages.length);
 
-const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER || '51967797232';
+const WHATSAPP_MITIENDA = import.meta.env.VITE_WHATSAPP_NUMBER || '51967797232';
 
 const mode = computed(() => store.widgetConfig.mode);
 
@@ -30,8 +30,34 @@ const BOT_NAME = computed(() => {
   }
 });
 
+/**
+ * A quién se deriva cuando el comprador quiere hablar con una persona.
+ *
+ * El número no puede vivir en el bundle: hay uno solo para todas las tiendas, y
+ * durante un tiempo el widget mandó a los compradores de cualquier tienda al
+ * WhatsApp de MiTienda. En modo compra lo pasa el storefront ya armado —con el
+ * código de país resuelto, que no es el prefijo guardado— y si la tienda no tiene
+ * WhatsApp configurado, no se ofrece: es mejor no mostrar el enlace que mandar al
+ * comprador a un sitio donde nadie sabe de su pedido.
+ *
+ * En la landing y en soporte sí atiende MiTienda, así que ahí vale el de siempre.
+ */
+const whatsappUrl = computed(() => {
+  if (store.widgetConfig.whatsappUrl) return store.widgetConfig.whatsappUrl;
+  if (mode.value === 'shopping') return '';
+  return `https://wa.me/${WHATSAPP_MITIENDA}`;
+});
+
+const whatsappLabel = computed(() =>
+  mode.value === 'shopping'
+    ? '¿Prefieres hablar con la tienda? Escríbele por WhatsApp'
+    : '¿Necesitas hablar con una persona? Chatea por WhatsApp'
+);
+
 function openWhatsApp() {
-  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=Hola, necesito ayuda`, '_blank');
+  if (!whatsappUrl.value) return;
+  const separator = whatsappUrl.value.includes('?') ? '&' : '?';
+  window.open(`${whatsappUrl.value}${separator}text=${encodeURIComponent('Hola, necesito ayuda')}`, '_blank');
 }
 
 function scrollToBottom() {
@@ -153,13 +179,13 @@ watch(
         />
       </div>
 
-      <!-- WhatsApp button -->
-      <div class="mt-px-4 mt-pb-1">
+      <!-- Derivar a una persona. Sin número configurado no se ofrece. -->
+      <div v-if="whatsappUrl" class="mt-px-4 mt-pb-1">
         <button
           @click="openWhatsApp"
           class="mt-w-full mt-text-xs mt-text-gray-500 hover:mt-text-primary mt-transition mt-bg-transparent mt-border-0 mt-cursor-pointer mt-py-1"
         >
-          ¿Necesitas hablar con una persona? Chatea por WhatsApp
+          {{ whatsappLabel }}
         </button>
       </div>
     </template>
