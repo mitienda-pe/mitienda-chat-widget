@@ -48,12 +48,13 @@ const salesSuggestions = [
 ];
 
 // Lo primero que ve el comprador, así que cada una tiene que ser algo que el
-// asistente sepa responder de verdad. Las dos que estaban antes —ofertas y más
-// vendidos— no lo eran: no hay datos de promociones ni de ventas, y el asistente
-// terminaba presentando resultados de búsqueda como superventas y como ofertas
-// que nadie había puesto.
+// asistente sepa responder de verdad. "Más vendidos" estuvo fuera un tiempo
+// porque no había datos de ventas y el asistente presentaba resultados de
+// búsqueda como si fueran un ranking; vuelve ahora que la herramienta
+// mas_vendidos lee las ventas reales. "Qué hay en oferta" sigue fuera: no hay
+// datos de promociones.
 const shoppingSuggestions = [
-  'Busco un regalo, ¿qué me recomiendas?',
+  '¿Cuáles son los más vendidos?',
   '¿Cuánto cuesta el envío a mi distrito?',
   '¿Dónde está mi pedido?',
   '¿Aceptan cambios o devoluciones?',
