@@ -47,11 +47,16 @@ const salesSuggestions = [
   'Quiero agendar una demo',
 ];
 
+// Lo primero que ve el comprador, así que cada una tiene que ser algo que el
+// asistente sepa responder de verdad. Las dos que estaban antes —ofertas y más
+// vendidos— no lo eran: no hay datos de promociones ni de ventas, y el asistente
+// terminaba presentando resultados de búsqueda como superventas y como ofertas
+// que nadie había puesto.
 const shoppingSuggestions = [
-  '¿Qué productos tienen en oferta?',
-  'Busco algo para regalar',
-  '¿Cuáles son los más vendidos?',
+  'Busco un regalo, ¿qué me recomiendas?',
+  '¿Cuánto cuesta el envío a mi distrito?',
   '¿Dónde está mi pedido?',
+  '¿Aceptan cambios o devoluciones?',
 ];
 
 const suggestions = computed(() => {
